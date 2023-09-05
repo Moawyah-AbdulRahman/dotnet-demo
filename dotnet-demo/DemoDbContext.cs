@@ -7,15 +7,15 @@ public class DemoDbContext : DbContext
 {
     public DbSet<Customer> Customers { get; set; }
 
+    private readonly IConfiguration _configuration;
+    public DemoDbContext(IConfiguration configuration) : base()
+    {
+        _configuration = configuration;
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(
-            @"Server=localhost;
-            User Id=sa;
-            Password=P@ssw0rd;
-            Database=demoDb;
-            Encrypt=True;
-            TrustServerCertificate=True;"
-        ); 
+        var connectionString = _configuration.GetConnectionString("Database");
+        optionsBuilder.UseSqlServer(connectionString); 
     }
 }
